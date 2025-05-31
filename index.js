@@ -2,6 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
+app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan(function (tokens, req, res) {
   return [
@@ -87,6 +88,11 @@ app.post('/api/persons', (request, response) => {
   response.status(201).json(newPerson);
 })
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
